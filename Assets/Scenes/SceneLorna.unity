@@ -232,6 +232,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b0fdc564f5630947a077ff50e2c1788, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boardRows: 20
+  boardColumns: 20
+  sizeRoomMin: 6
+  sizeRoomMax: 10
 --- !u!4 &1705078264
 Transform:
   m_ObjectHideFlags: 0

@@ -11,7 +11,14 @@ public class BSP : MonoBehaviour
 
     private SubRoom root;
 
-    // start = root.split
+    //// start = root.split
+
+    private void Start()
+    {
+        root = new SubRoom(new Rect(0, 0, boardRows, boardColumns));
+        CreateBSP(root);
+        root.CreateRoom();
+    }
 
     void CreateBSP(SubRoom subRoom)
     {
@@ -38,7 +45,7 @@ public class BSP : MonoBehaviour
         private SubRoom left; //child1
         private SubRoom right; //child2
         private Rect rectangle;
-        //private Rect room = new Rect(-1, -1, 0, 0); // float x, float y, float width, float height
+        private Rect room = new Rect(-1, -1, 0, 0); // float x, float y, float width, float height
         
         public SubRoom Left
         {
@@ -108,5 +115,27 @@ public class BSP : MonoBehaviour
             return true;
         }
 
+        public void CreateRoom() // tree structure with leaves & each will create room with random size
+        {
+            if(left != null)
+            {
+                Left.CreateRoom();
+            }
+            if(right != null)
+            {
+                right.CreateRoom();
+            }
+            if(isLeaf())
+            {
+                int roomWidth = Mathf.RoundToInt(Random.Range(rectangle.width / 2, rectangle.width - 2)); //random.range (float min, float max)
+                int roomHeight = Mathf.RoundToInt(Random.Range(rectangle.height / 2, rectangle.height - 2));
+                int roomX = Mathf.RoundToInt(Random.Range(1, rectangle.width - roomWidth - 1));
+                int roomY = Mathf.RoundToInt(Random.Range(1, rectangle.height - roomHeight - 1));
+
+                // room position absolute (?) on the board, not relative to subroom
+                room = new Rect(rectangle.x + roomX, rectangle.y + roomY, roomWidth, roomHeight); // Q
+                
+            }
+        }
     }
 
