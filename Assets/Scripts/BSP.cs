@@ -9,12 +9,53 @@ public class BSP : MonoBehaviour
     [SerializeField] private int sizeRoomMin;
     [SerializeField] private int sizeRoomMax;
 
+    private SubRoom root;
+
+    // start = root.split
+
+    void CreateBSP(SubRoom subRoom)
+    {
+        if(subRoom.isLeaf()) // if subroom too large
+        {
+            if(subRoom.Rectangle.width > sizeRoomMax
+               || subRoom.Rectangle.height > sizeRoomMax
+               || Random.Range(0.0f,1.0f) > 0.25)
+            {
+                CreateBSP(subRoom.Left);
+                CreateBSP(subRoom.Right);
+            }
+        }
+    }
+
+
+
+}
+
+
     class SubRoom
     {
-        [SerializeField] private SubRoom left;
-        [SerializeField] private SubRoom right;
+        public SubRoom(Rect newRectangle) { rectangle = newRectangle; }
+        private SubRoom left; //child1
+        private SubRoom right; //child2
         private Rect rectangle;
-        private Rect room = new Rect(-1, -1, 0, 0); // float x, float x, float width, float height
+        //private Rect room = new Rect(-1, -1, 0, 0); // float x, float y, float width, float height
+        
+        public SubRoom Left
+        {
+            get => left;
+            set => left = value;
+        }
+        public SubRoom Right
+        {
+            get => right;
+            set => right = value;
+        }
+
+        public Rect Rectangle
+        {
+            get => rectangle;
+            set => rectangle = value;
+        }
 
         public bool isLeaf() // know if node in the tree has children
         {
@@ -32,22 +73,22 @@ public class BSP : MonoBehaviour
             // if too wide = split vertically, too long = split horizontally
             // nearly square = random split
 
-            bool splitRoom;
+            bool splitVertical; // know if split vertically or horizontally
 
             if (rectangle.width / rectangle.height >= 1.25)
             {
-                splitRoom = false;
+                splitVertical = false;
             }
             else if (rectangle.height / rectangle.width >= 1.25)
             {
-                splitRoom = true;
+                splitVertical = true;
             }
             else
             {
-                splitRoom = Random.Range(0.0f, 1.0f) > 0.5;
+                splitVertical = Random.Range(0.0f, 1.0f) > 0.5;
             }
 
-            if (splitRoom)
+            if (splitVertical)
             {
                 // split so the sub rooms widths are not too small
                 // for horizontal split
@@ -64,20 +105,8 @@ public class BSP : MonoBehaviour
                 left = new SubRoom(new Rect(rectangle.x, rectangle.y, split, rectangle.height));
                 right = new SubRoom(new Rect(rectangle.x + split, rectangle.y, rectangle.width - split, rectangle.height));
             }
-            return false;
+            return true;
         }
 
     }
 
-
-    void Start()
-    {
-
-    }
-
-
-    void Update()
-    {
-
-    }
-}
