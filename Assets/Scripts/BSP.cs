@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class BSP : MonoBehaviour
 {
@@ -9,32 +10,68 @@ public class BSP : MonoBehaviour
     [SerializeField] private int sizeRoomMin;
     [SerializeField] private int sizeRoomMax;
 
-    private SubRoom root;
+    [SerializeField] private GameObject groundTile; // éviter gameobject
+    private GameObject[,] boardFloorPositions;
 
-    //// start = root.split
+    private SubRoom root;
 
     private void Start()
     {
         root = new SubRoom(new Rect(0, 0, boardRows, boardColumns));
         CreateBSP(root);
         root.CreateRoom();
+
+        boardFloorPositions = new GameObject[boardRows, boardColumns];
+        DrawRooms(root);
     }
 
     void CreateBSP(SubRoom subRoom)
     {
         if(subRoom.isLeaf()) // if subroom too large
         {
-            if(subRoom.Rectangle.width > sizeRoomMax
-               || subRoom.Rectangle.height > sizeRoomMax
-               || Random.Range(0.0f,1.0f) > 0.25)
+            if(subRoom.Rectangle.width > sizeRoomMax || subRoom.Rectangle.height > sizeRoomMax ||
+                (
+                    subRoom.Rectangle.width > sizeRoomMin || 
+                    subRoom.Rectangle.height > sizeRoomMin) && 
+                    Random.Range(0.0f,1.0f) > 0.25
+                   )
+
             {
+                subRoom.Split((int)subRoom.Rectangle.width,(int)subRoom.Rectangle.height);
                 CreateBSP(subRoom.Left);
                 CreateBSP(subRoom.Right);
             }
         }
     }
 
+    [SerializeField] Tilemap tilemap;
+    [SerializeField] Tile tile;
 
+    void DrawRooms(SubRoom subRoom)
+    {
+        if(subRoom == null)
+        {
+            return;
+        }
+        if(subRoom.isLeaf())
+        {
+            for(int i = Mathf.RoundToInt(subRoom.Room.x); i < subRoom.Room.xMax;i++)
+            {
+                for (int j = Mathf.RoundToInt(subRoom.Room.y); j < subRoom.Room.yMax; j++)
+                {
+                    tilemap.SetTile(new Vector3Int(i, j, 0), tile);
+                    //GameObject instance = Instantiate(groundTile, new Vector3(i, j, 0f), Quaternion.identity) as GameObject;
+                    //instance.transform.SetParent(transform);
+                    //boardFloorPositions[i, j] = instance;
+                }
+            }
+        }
+        else
+        {
+            DrawRooms(subRoom.Left);
+            DrawRooms(subRoom.Right);
+        }
+    }
 
 }
 
@@ -62,6 +99,12 @@ public class BSP : MonoBehaviour
         {
             get => rectangle;
             set => rectangle = value;
+        }
+        
+        public Rect Room
+        {
+            get => room;
+            set => room = value;
         }
 
         public bool isLeaf() // know if node in the tree has children
