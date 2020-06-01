@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     Rigidbody2D body;
-    [SerializeField] Camera Cam;
+    [SerializeField] Camera cam;
     Vector2 mousePosition;
     Vector2 direction;
     [SerializeField]float speed;
@@ -18,15 +18,15 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        body.velocity = new Vector2(direction.x * speed* Time.fixedDeltaTime, direction.y * speed* Time.fixedDeltaTime);
+        body.velocity = new Vector2(direction.x * speed * Time.fixedDeltaTime, direction.y * speed * Time.fixedDeltaTime);
         Vector2 lookDirection = mousePosition - body.position;
-        float angle = Mathf.Atan2(lookDirection.y,lookDirection.x)*Mathf.Rad2Deg;
+        float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
         body.rotation = angle;
     }
     
     void Update()
     {
-        direction = new Vector2(Input.GetAxisRaw("Horizontal") * speed, Input.GetAxisRaw("Vertical")*speed);
-        mousePosition = Cam.ScreenToWorldPoint(Input.mousePosition);
+        direction = new Vector2(Input.GetAxisRaw("Horizontal") * speed, Input.GetAxisRaw("Vertical") * speed);
+        mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
     }
 }
