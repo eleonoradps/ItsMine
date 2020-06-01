@@ -3703,7 +3703,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 871323191}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 99371742c5872cb4f8960c3354e1d744, type: 3}
   m_Name: 
@@ -3804,7 +3804,7 @@ GameObject:
   - component: {fileID: 1464928761}
   - component: {fileID: 1464928763}
   m_Layer: 0
-  m_Name: Pathfinder
+  m_Name: Map Generator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3853,9 +3853,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabPlayer: {fileID: 5808795887435103420, guid: cb69a7b497c54c643884f61444b7be91,
     type: 3}
-  prefabBox: {fileID: 0}
+  prefabBox: {fileID: 7931496442339011449, guid: 3f05135d48fbd7444a3f191f55280d1c,
+    type: 3}
   prefabIa: {fileID: 5896148204484885925, guid: 7d20a9e8f6112c44f82c09a1bc2ffe29,
     type: 3}
+  maxBoxes: 10
 --- !u!1 &1781538001
 GameObject:
   m_ObjectHideFlags: 0
