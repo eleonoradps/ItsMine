@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - player
+  - box
+  - IA
+  - wall
+  - ground
+  - background
   layers:
   - Default
   - TransparentFX
@@ -13,12 +19,12 @@ TagManager:
   - UI
   - 
   - 
-  - Player
-  - 
-  - 
-  - 
-  - 
-  - 
+  - background
+  - ground
+  - wall
+  - player
+  - IA
+  - box
   - 
   - 
   - 
@@ -41,6 +47,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Player
+  - name: background
+    uniqueID: 3205424807
+    locked: 0
+  - name: ground
+    uniqueID: 128862151
+    locked: 0
+  - name: wall
+    uniqueID: 2554570037
+    locked: 0
+  - name: player
     uniqueID: 4045560233
+    locked: 0
+  - name: IA
+    uniqueID: 1964715699
+    locked: 0
+  - name: box
+    uniqueID: 1973989065
     locked: 0

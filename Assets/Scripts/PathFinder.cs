@@ -137,7 +137,7 @@ public class PathFinder : MonoBehaviour
                 }
             }
         }
-        spawner.SpawnPlayer(sizeTilemap);
+        spawner.SpawnEntities(sizeTilemap);
         //RandomPos();
         //FindPath(startNode, endNode);
         //currentNode = endNode;
