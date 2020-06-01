@@ -33,8 +33,7 @@ public class PathFinder : MonoBehaviour
         }
     }
 
-    //[SerializeField] GameObject prefabCircle;
-    GameObject circle;
+    Spawner spawner;
     
     Node currentNode;
     Node startNode;
@@ -53,7 +52,8 @@ public class PathFinder : MonoBehaviour
     
     private void Start()
     {
-        Invoke("NodeGen", 1.0f); //remplacer par timer
+        spawner = GetComponent<Spawner>();
+        Invoke("NodeGen", 1.0f); //appeler la fonction quand gen termine passer en public
     }
 
     /*private void Update()
@@ -137,7 +137,7 @@ public class PathFinder : MonoBehaviour
                 }
             }
         }
-
+        spawner.SpawnPlayer(sizeTilemap);
         //RandomPos();
         //FindPath(startNode, endNode);
         //currentNode = endNode;
@@ -166,7 +166,7 @@ public class PathFinder : MonoBehaviour
             endNode = GetClosestNode(circle.transform.position);
         }
     }
-
+*/
     float DistanceManhattan(Vector3 pos1, Vector3 pos2)
     {
         return Mathf.Abs(pos2.x - pos1.x) + Mathf.Abs(pos2.y - pos1.y);
@@ -196,7 +196,7 @@ public class PathFinder : MonoBehaviour
 
         return closestNode;
     }
-
+/*
     void FindPath(Node startNode, Node endNode)
     {
         List<Node> openSet = new List<Node>();
@@ -265,8 +265,8 @@ public class PathFinder : MonoBehaviour
             currentNode.type = NodeType.FREE;
             currentNode = currentNode.parent;
         }
-    }*/
-
+    }
+*/
 
     void OnDrawGizmos()
     {
