@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour
@@ -11,13 +12,14 @@ public class Spawner : MonoBehaviour
     [SerializeField] GameObject prefabBox;
     [SerializeField] GameObject prefabIa;
     [SerializeField] int maxBoxes;
+    [SerializeField] Tile groundTile;
     PathFinder pathFinder;
     Vector2 playerStartpos;
-    Vector2 iaStartPos;
+    Vector2 aiStartPos;
 
     List<Vector2> boxesPos;
 
-    private void Start()
+    private void Awake()
     {
         pathFinder = GetComponent<PathFinder>();
         boxesPos = new List<Vector2>();
@@ -30,11 +32,11 @@ public class Spawner : MonoBehaviour
         playerStartpos = spawnNode.pos;
         Instantiate(prefabPlayer, playerStartpos, Quaternion.identity);
 
-        //spawn IA on the most down right node
+        //spawn AI on the most down right node
         spawnNode = pathFinder.GetClosestNode(new Vector3Int(mapSize.x, 0, 0));
-        iaStartPos = spawnNode.pos;
-        Instantiate(prefabIa, iaStartPos, Quaternion.identity);
-        
+        aiStartPos = spawnNode.pos;
+        Instantiate(prefabIa, aiStartPos, Quaternion.identity);
+
         //spawn boxes
         for (int i = 0; i < maxBoxes; i++)
         {
@@ -42,15 +44,16 @@ public class Spawner : MonoBehaviour
             int spawnY = Random.Range(0, mapSize.y);
             Vector3Int spawnPos = new Vector3Int(spawnX, spawnY, 0);
             bool canSpawn = true;
-            
-            //block spawn in player and IA position
+
+
+            //block spawn in player and AI position
             spawnNode = pathFinder.GetClosestNode(spawnPos);
             if (spawnNode.pos == playerStartpos
-                || spawnNode.pos == iaStartPos)
+                || spawnNode.pos == aiStartPos)
             {
                 canSpawn = false;
             }
-                
+
             //block spawn in other boxes position
             foreach (Vector2 boxPos in boxesPos)
             {
@@ -73,4 +76,10 @@ public class Spawner : MonoBehaviour
         }
     }
 
+    public Vector3 returnRandomBoxPos()
+    {
+        int boxPosX = Random.Range((int) boxesPos[0].x, (int) boxesPos[maxBoxes].x);
+        int boxPosY = Random.Range((int) boxesPos[0].x, (int) boxesPos[maxBoxes].x);
+        return new Vector3(boxPosX, boxPosY, 0);
+    }
 }

@@ -10,6 +10,7 @@ TagManager:
   - wall
   - ground
   - background
+  - truck
   layers:
   - Default
   - TransparentFX
@@ -25,7 +26,7 @@ TagManager:
   - player
   - IA
   - box
-  - 
+  - truck
   - 
   - 
   - 
@@ -64,4 +65,7 @@ TagManager:
     locked: 0
   - name: box
     uniqueID: 1973989065
+    locked: 0
+  - name: truck
+    uniqueID: 3876795059
     locked: 0

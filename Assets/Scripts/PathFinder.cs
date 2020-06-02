@@ -34,15 +34,13 @@ public class PathFinder : MonoBehaviour
     }
 
     Spawner spawner;
-    
+
     Node currentNode;
-    Node startNode;
-    Vector3 startPos;
-    Node endNode;
-    Vector3 endPos;
+    Node goalNode;
+    Vector3 goalPos;
     
-    [SerializeField] Tilemap groundMap;
-    [SerializeField] Tilemap wallMap;
+    [SerializeField] Tilemap groundTileMap;
+    [SerializeField] Tilemap wallTileMap;
 
     float lerp = 0.1f;
 
@@ -53,7 +51,7 @@ public class PathFinder : MonoBehaviour
     private void Start()
     {
         spawner = GetComponent<Spawner>();
-        Invoke("NodeGen", 1.0f); //appeler la fonction quand gen termine passer en public
+        NodeGen();
     }
 
     /*private void Update()
@@ -82,7 +80,7 @@ public class PathFinder : MonoBehaviour
     {
         nodes = new Node[sizeTilemap.x, sizeTilemap.y];
 
-        Vector2Int offset = (Vector2Int) wallMap.origin;
+        Vector2Int offset = (Vector2Int) wallTileMap.origin;
 
         for (int x = 0 + offset.x; x < sizeTilemap.x + offset.x; x++)
         {
@@ -90,13 +88,13 @@ public class PathFinder : MonoBehaviour
             {
                 Vector2Int nodeIndex = new Vector2Int(x - offset.x, y - offset.y);
                 nodes[nodeIndex.x, nodeIndex.y] = new Node();
-                nodes[nodeIndex.x, nodeIndex.y].pos = new Vector2(x, y) + (Vector2) groundMap.cellSize / 2.0f;
+                nodes[nodeIndex.x, nodeIndex.y].pos = new Vector2(x, y) + (Vector2) groundTileMap.cellSize / 2.0f;
 
                 nodes[nodeIndex.x, nodeIndex.y].type = NodeType.NOT_FREE;
 
-                if (groundMap.HasTile(new Vector3Int(x, y, 0)))
+                if (groundTileMap.HasTile(new Vector3Int(x, y, 0)))
                 {
-                    if (!wallMap.HasTile(new Vector3Int(x, y, 0)))
+                    if (!wallTileMap.HasTile(new Vector3Int(x, y, 0)))
                     {
                         nodes[nodeIndex.x, nodeIndex.y].type = NodeType.FREE;
                     }
@@ -143,30 +141,6 @@ public class PathFinder : MonoBehaviour
         //currentNode = endNode;
     }
 
-    /*void RandomPos()
-    {
-        startPos.x = Random.Range(0, sizeTilemap.x);
-        startPos.y = Random.Range(0, sizeTilemap.y);
-        startPos.z = 0;
-
-        startNode = GetClosestNode(startPos);
-
-        if (!circle)
-        {
-            endPos.x = Random.Range(0, sizeTilemap.x);
-            endPos.y = Random.Range(0, sizeTilemap.y);
-            endPos.z = 0;
-
-            endNode = GetClosestNode(endPos);
-        
-            circle = Instantiate(prefabCircle, endNode.pos, Quaternion.identity);
-        }
-        else
-        {
-            endNode = GetClosestNode(circle.transform.position);
-        }
-    }
-*/
     float DistanceManhattan(Vector3 pos1, Vector3 pos2)
     {
         return Mathf.Abs(pos2.x - pos1.x) + Mathf.Abs(pos2.y - pos1.y);
@@ -196,8 +170,9 @@ public class PathFinder : MonoBehaviour
 
         return closestNode;
     }
-/*
-    void FindPath(Node startNode, Node endNode)
+
+
+    public void FindPath(Node startNode, Node endNode)
     {
         List<Node> openSet = new List<Node>();
         List<Node> closedSet = new List<Node>();
@@ -256,7 +231,7 @@ public class PathFinder : MonoBehaviour
         }
     }
     
-    void DeletePath(Node startNode, Node endNode)
+    public void DeletePath(Node startNode, Node endNode)
     {
         Node currentNode = endNode;
 
@@ -266,7 +241,7 @@ public class PathFinder : MonoBehaviour
             currentNode = currentNode.parent;
         }
     }
-*/
+
 
     void OnDrawGizmos()
     {
@@ -285,12 +260,8 @@ public class PathFinder : MonoBehaviour
                 {
                     Gizmos.color = Color.red;
                 }
-
-                if (nodes[x, y] == startNode)
-                {
-                    Gizmos.color = Color.blue;
-                }
-                else if (nodes[x, y] == endNode)
+                
+                if (nodes[x, y] == goalNode)
                 {
                     Gizmos.color = Color.black;
                 }
