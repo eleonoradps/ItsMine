@@ -23,11 +23,14 @@ public class BSP : MonoBehaviour
 
         boardFloorPositions = new GameObject[boardRows, boardColumns];
         DrawRooms(root);
+        DrawCorridors(root);
+
+
     }
 
     void CreateBSP(SubRoom subRoom)
     {
-        if(subRoom.isLeaf()) // if subroom too large
+        if(subRoom.IsLeaf()) // if subroom too large
         {
             if(subRoom.Rectangle.width > sizeRoomMax || subRoom.Rectangle.height > sizeRoomMax ||
                 (
@@ -45,7 +48,8 @@ public class BSP : MonoBehaviour
     }
 
     [SerializeField] Tilemap tilemap;
-    [SerializeField] Tile tile;
+    [SerializeField] Tile g_Tile;
+    [SerializeField] Tile c_Tile;
 
     void DrawRooms(SubRoom subRoom)
     {
@@ -53,13 +57,13 @@ public class BSP : MonoBehaviour
         {
             return;
         }
-        if(subRoom.isLeaf())
+        if(subRoom.IsLeaf())
         {
             for(int i = Mathf.RoundToInt(subRoom.Room.x); i < subRoom.Room.xMax;i++)
             {
                 for (int j = Mathf.RoundToInt(subRoom.Room.y); j < subRoom.Room.yMax; j++)
                 {
-                    tilemap.SetTile(new Vector3Int(i, j, 0), tile);
+                    tilemap.SetTile(new Vector3Int(i, j, 0), g_Tile);
                     //GameObject instance = Instantiate(groundTile, new Vector3(i, j, 0f), Quaternion.identity) as GameObject;
                     //instance.transform.SetParent(transform);
                     //boardFloorPositions[i, j] = instance;
@@ -73,6 +77,30 @@ public class BSP : MonoBehaviour
         }
     }
 
+    void DrawCorridors(SubRoom subRoom)
+    {
+        if(subRoom == null)
+        {
+            return;
+        }
+
+        DrawCorridors(subRoom.Left);
+        DrawCorridors(subRoom.Right);
+
+        foreach(Rect corridor in subRoom.Corridors)
+        {
+            for(int i = Mathf.RoundToInt(corridor.x);i< corridor.xMax;i++)
+            {
+                for (int j = Mathf.RoundToInt(corridor.y); j < corridor.yMax; j++)
+                {
+                    if(boardFloorPositions[i,j] == null)
+                    {
+                        tilemap.SetTile(new Vector3Int(i, j, 0), c_Tile);
+                    }
+                }
+            }
+        }
+    }
 }
 
 
@@ -83,6 +111,8 @@ public class BSP : MonoBehaviour
     private SubRoom right; //child2
     private Rect rectangle;
     private Rect room = new Rect(-1, -1, 0, 0); // float x, float y, float width, float height
+
+    private List<Rect> corridors = new List<Rect>(); //corridors for each room
         
     public SubRoom Left
     {
@@ -107,14 +137,20 @@ public class BSP : MonoBehaviour
         set => room = value;
     }
 
-    public bool isLeaf() // know if node in the tree has children
+    public List<Rect> Corridors
+    {
+        get => corridors;
+        set => corridors = value;
+    }
+
+    public bool IsLeaf() // know if node in the tree has children
     {
         return (left == null && right == null);
     }
 
     public bool Split(int sizeRoomMin, int sizeRoomMax)
     {
-        if (!isLeaf())
+        if (!IsLeaf())
         {
             return false;
         }
@@ -168,17 +204,114 @@ public class BSP : MonoBehaviour
         {
             right.CreateRoom();
         }
-        if(isLeaf())
+        if(IsLeaf())
         {
             int roomWidth = Mathf.RoundToInt(Random.Range(rectangle.width / 2, rectangle.width - 2)); //random.range (float min, float max)
             int roomHeight = Mathf.RoundToInt(Random.Range(rectangle.height / 2, rectangle.height - 2));
             int roomX = Mathf.RoundToInt(Random.Range(1, rectangle.width - roomWidth - 1));
             int roomY = Mathf.RoundToInt(Random.Range(1, rectangle.height - roomHeight - 1));
 
-            // room position absolute (?) on the board, not relative to subroom
-            room = new Rect(rectangle.x + roomX, rectangle.y + roomY, roomWidth, roomHeight); // Q
+            // room position absolute on the board, not relative to subroom
+            room = new Rect(rectangle.x + roomX, rectangle.y + roomY, roomWidth, roomHeight);
                 
         }
     }
-}
+
+    //method to get room of subroom
+    //if subroom not a leaf(doesn't have a room) => return the room of a child
+    public Rect GetRoom()
+    {
+        if(IsLeaf())
+        {
+            return room;
+        }
+        if(left != null)
+        {
+            Rect leftRoom = left.GetRoom();
+            if(leftRoom.x != -1)
+            {
+                return leftRoom;
+            }
+        }
+        if(right != null)
+        {
+            Rect rightRoom = right.GetRoom();
+            if(rightRoom.x != -1)
+            {
+                return rightRoom;
+            }
+        }
+        return new Rect(-1, -1, 0, 0); // workaround for non nullable structs
+    }
+
+    //create corridors between rooms
+    public void CreateCorridors(SubRoom left, SubRoom right)
+    {
+        Rect leftRoom = left.GetRoom();
+        Rect rightRoom = right.GetRoom();
+
+        //attach corridor to a random point in each room
+        Vector2 leftPoint = new Vector2(Mathf.RoundToInt(Random.Range(leftRoom.x + 1, leftRoom.xMax - 1)),
+                                        Mathf.RoundToInt(Random.Range(leftRoom.y + 1, leftRoom.yMax - 1)));
+        Vector2 rightPoint = new Vector2(Mathf.RoundToInt(Random.Range(rightRoom.x + 1, rightRoom.xMax - 1)),
+                                        Mathf.RoundToInt(Random.Range(rightRoom.y + 1, rightRoom.yMax - 1)));
+
+        //make sure that left point is on the left
+        if(leftPoint.x > rightPoint.x) // Q
+        {
+            Vector2 temp = leftPoint;
+            leftPoint = rightPoint;
+            rightPoint = temp;
+        }
+
+        int w = Mathf.RoundToInt(leftPoint.x - rightPoint.x);
+        int h = Mathf.RoundToInt(leftPoint.y - rightPoint.y);
+
+        //if if point are not aligned horizontally choose random to go horizontal then vertical or opposite
+        //and add corridor to the right
+        if(w != 0)
+        {
+            if(Random.Range(0,1) > 2)
+            {
+                corridors.Add(new Rect(leftPoint.x, leftPoint.y, Mathf.Abs(w) + 1, 1));
+
+                //if left point is below right point we go up or else go down
+                if(h < 0)
+                {
+                    corridors.Add(new Rect(rightPoint.x, leftPoint.y, 1, Mathf.Abs(h)));
+                }
+                else
+                {
+                    corridors.Add(new Rect(rightPoint.x, leftPoint.y, 1, -Mathf.Abs(h)));
+                }
+            }
+            else //go up or go down
+            {
+                if(h < 0)
+                {
+                    corridors.Add(new Rect(leftPoint.x, leftPoint.y, 1, Mathf.Abs(h)));
+                }
+                else
+                {
+                    corridors.Add(new Rect(leftPoint.x, rightPoint.y, 1, Mathf.Abs(h)));
+                }
+
+                //then go right
+                corridors.Add(new Rect(leftPoint.x, rightPoint.y, Mathf.Abs(w) + 1, 1));
+            }
+        }
+        else
+        {
+            //if points are aligned horizontally go up or down depending on positions
+            if(h < 0)
+            {
+                corridors.Add(new Rect((int)leftPoint.x, (int)leftPoint.y, 1, Mathf.Abs(h)));
+            }
+            else
+            {
+                corridors.Add(new Rect((int)rightPoint.x, (int)rightPoint.y, 1, Mathf.Abs(h)));
+            }
+        }
+    }
+ }
 

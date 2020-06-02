@@ -398,7 +398,8 @@ MonoBehaviour:
   groundTile: {fileID: 92510653591066513, guid: 9daa4ff3a1c60b74086b63947fc0cd34,
     type: 3}
   tilemap: {fileID: 409642599}
-  tile: {fileID: 11400000, guid: a4ad710f4d15fe040ad7ef58df8b1df9, type: 2}
+  g_Tile: {fileID: 11400000, guid: a4ad710f4d15fe040ad7ef58df8b1df9, type: 2}
+  c_Tile: {fileID: 11400000, guid: a4ad710f4d15fe040ad7ef58df8b1df9, type: 2}
 --- !u!4 &1705078264
 Transform:
   m_ObjectHideFlags: 0
