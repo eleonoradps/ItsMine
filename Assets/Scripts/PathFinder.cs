@@ -102,7 +102,7 @@ public class PathFinder : MonoBehaviour
             }
         }
 
-        BoundsInt bounds = new BoundsInt(-2, -2, 0, 5, 5, 1);
+        BoundsInt bounds = new BoundsInt(-1, -1, 0, 3, 3, 1);
 
         for (int x = 0; x < sizeTilemap.x; x++)
         {

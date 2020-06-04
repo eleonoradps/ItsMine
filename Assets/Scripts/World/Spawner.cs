@@ -76,10 +76,9 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    public Vector3 returnRandomBoxPos()
+    public Vector2 ReturnRandomBoxPos()
     {
-        int boxPosX = Random.Range((int) boxesPos[0].x, (int) boxesPos[maxBoxes].x);
-        int boxPosY = Random.Range((int) boxesPos[0].x, (int) boxesPos[maxBoxes].x);
-        return new Vector3(boxPosX, boxPosY, 0);
+        int boxIndex = Random.Range(0, maxBoxes - 1);
+        return boxesPos[boxIndex];
     }
 }

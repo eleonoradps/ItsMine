@@ -13,7 +13,7 @@ public class AIStateMachine : MonoBehaviour
         ATTACK_PLAYER
     }
     
-    AIstate state = AIstate.IDLE;
+    AIstate state = AIstate.TAKE_BOX;
 
     PathFinder pathFinder;
     Transform aiPos;
@@ -35,11 +35,10 @@ public class AIStateMachine : MonoBehaviour
             case AIstate.TAKE_BOX:
 
                 PathFinder.Node startNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
-                Vector3 boxPos = spawner.returnRandomBoxPos();
+                Vector2 boxPos = spawner.ReturnRandomBoxPos();
                 PathFinder.Node goalNode = pathFinder.GetClosestNode(new Vector3(boxPos.x, boxPos.y, 0));
                 pathFinder.FindPath(startNode, goalNode);
-                FollowPath();
-
+                //FollowPath();
                 break;
             case AIstate.PUT_BOX_IN_TRUCK:
                 
@@ -52,8 +51,8 @@ public class AIStateMachine : MonoBehaviour
         }
     }
 
-    void FollowPath()
+    /*void FollowPath()
     {
         
-    }
+    }*/
 }
