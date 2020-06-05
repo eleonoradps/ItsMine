@@ -22,6 +22,7 @@ public class AIStateMachine : MonoBehaviour
     Spawner spawner;
     [SerializeField] float speed;
     float distance;
+    bool haveBox = false;
 
     PathFinder.Node startNode;
     PathFinder.Node goalNode;
@@ -78,6 +79,15 @@ public class AIStateMachine : MonoBehaviour
         if (distance <= 0.1f)
         {
             currentNode = currentNode.parent;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("box"))
+        {
+            Destroy(other.gameObject);
+            haveBox = true;
         }
     }
 }
