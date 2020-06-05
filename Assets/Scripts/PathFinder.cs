@@ -78,6 +78,7 @@ public class PathFinder : MonoBehaviour
 
     void NodeGen()
     {
+        //Node generation
         nodes = new Node[sizeTilemap.x, sizeTilemap.y];
 
         Vector2Int offset = (Vector2Int) wallTileMap.origin;
@@ -101,7 +102,8 @@ public class PathFinder : MonoBehaviour
                 }
             }
         }
-
+        
+        //Set neighbors
         BoundsInt bounds = new BoundsInt(-1, -1, 0, 3, 3, 1);
 
         for (int x = 0; x < sizeTilemap.x; x++)
@@ -136,12 +138,13 @@ public class PathFinder : MonoBehaviour
             }
         }
         spawner.SpawnEntities(sizeTilemap);
+        
         //RandomPos();
         //FindPath(startNode, endNode);
         //currentNode = endNode;
     }
 
-    float DistanceManhattan(Vector3 pos1, Vector3 pos2)
+    public float DistanceManhattan(Vector3 pos1, Vector3 pos2)
     {
         return Mathf.Abs(pos2.x - pos1.x) + Mathf.Abs(pos2.y - pos1.y);
     }
@@ -174,6 +177,7 @@ public class PathFinder : MonoBehaviour
 
     public void FindPath(Node startNode, Node endNode)
     {
+        //Find path with A* algorithm
         List<Node> openSet = new List<Node>();
         List<Node> closedSet = new List<Node>();
         openSet.Add(startNode);
@@ -222,6 +226,7 @@ public class PathFinder : MonoBehaviour
 
     void RetracePath(Node startNode, Node endNode)
     {
+        //Set path nodes
         Node currentNode = endNode;
 
         while (currentNode != startNode)
@@ -229,6 +234,8 @@ public class PathFinder : MonoBehaviour
             currentNode.type = NodeType.PATH;
             currentNode = currentNode.parent;
         }
+
+        startNode.type = NodeType.PATH;
     }
     
     public void DeletePath(Node startNode, Node endNode)
