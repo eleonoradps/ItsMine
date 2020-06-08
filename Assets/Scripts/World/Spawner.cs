@@ -84,15 +84,16 @@ public class Spawner : MonoBehaviour
         return boxesPos[boxIndex];
     }
 
-    public void DeleteBoxPos()
+    public void DeleteBoxPos(Vector2 takenBoxPos)
     {
-        Vector2 takenBoxPos = aiStateMachine.returnTakenBoxPos();
-        for (Vector2 boxPos in boxesPos)
+        Vector2 indexBox = new Vector2(0, 0);
+        for (int i = 0; i < boxesPos.Count; i++)
         {
-            if (boxPos == takenBoxPos)
+            if (takenBoxPos == boxesPos[i])
             {
-                
+                indexBox = boxesPos[i];
             }
         }
+        boxesPos.Remove(indexBox);
     }
 }

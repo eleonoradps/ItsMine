@@ -102,6 +102,7 @@ public class AIStateMachine : MonoBehaviour
         {
             Destroy(other.gameObject);
             takenBoxPos = other.transform.position;
+            spawner.DeleteBoxPos(takenBoxPos);
             haveBox = true;
             pathFinder.DeletePath(goalNode, startNode);
             state = AIstate.SEARCH_TRUCK_PATH;
@@ -112,10 +113,5 @@ public class AIStateMachine : MonoBehaviour
             pathFinder.DeletePath(goalNode, startNode);
             state = AIstate.SEARCH_BOX_PATH;
         }
-    }
-
-    public Vector2 returnTakenBoxPos()
-    {
-        return takenBoxPos;
     }
 }
