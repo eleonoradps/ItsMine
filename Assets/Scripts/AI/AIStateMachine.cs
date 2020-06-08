@@ -10,18 +10,20 @@ public class AIStateMachine : MonoBehaviour
         IDLE,
         SEARCH_BOX_PATH,
         SEARCH_TRUCK_PATH,
-        SEARCH_PLAYER_PATH,
+        CHASE_PLAYER,
         FOLLOW_PATH
     }
     
     AIstate state = AIstate.SEARCH_BOX_PATH;
 
+    PlayerController playerController;
     PathFinder pathFinder;
     Transform aiPos;
     Rigidbody2D aiBody;
     Spawner spawner;
     [SerializeField] float speed;
     float distance;
+    [SerializeField] float minDistance = 0f;
     bool haveBox = false;
     Vector2 takenBoxPos;
     
@@ -38,6 +40,7 @@ public class AIStateMachine : MonoBehaviour
         aiBody = GetComponent<Rigidbody2D>();
         pathFinder = FindObjectOfType<PathFinder>();
         spawner = FindObjectOfType<Spawner>();
+        playerController = FindObjectOfType<PlayerController>();
         truckNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
     }
     
@@ -64,17 +67,13 @@ public class AIStateMachine : MonoBehaviour
                 currentNode = startNode;
                 state = AIstate.FOLLOW_PATH;
                 break;
-            case AIstate.SEARCH_PLAYER_PATH:
+            case AIstate.CHASE_PLAYER:
                 
-                /*Vector2 boxPos = spawner.ReturnRandomBoxPos();
-                goalNode = pathFinder.GetClosestNode(new Vector3(boxPos.x, boxPos.y, 0));
-                startNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
-                pathFinder.FindPath(goalNode, startNode);
-                currentNode = startNode;
-                state = AIstate.FOLLOW_PATH;*/
+                CheckDistance();
                 break;
             case AIstate.FOLLOW_PATH:
                 
+                CheckDistance();
                 FollowPath(goalNode);
                 break;
             default:
@@ -96,6 +95,29 @@ public class AIStateMachine : MonoBehaviour
         }
     }
 
+    void CheckDistance()
+    {
+        
+        Vector2 playerPos = playerController.ReturnPlayerPos();
+        float distance = pathFinder.DistanceManhattan(aiPos.position, playerPos);
+        if (distance <= minDistance && !haveBox)
+        {
+            pathFinder.DeletePath(goalNode, startNode);
+            ChasePlayer();
+            state = AIstate.CHASE_PLAYER;
+        }
+        else
+        {
+            state = AIstate.FOLLOW_PATH;
+        }
+    }
+
+    void ChasePlayer()
+    {
+        Vector2 playerPos = playerController.ReturnPlayerPos();
+        aiBody.velocity = (playerPos - (Vector2)aiPos.position).normalized * speed;
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("box"))
@@ -107,10 +129,19 @@ public class AIStateMachine : MonoBehaviour
             pathFinder.DeletePath(goalNode, startNode);
             state = AIstate.SEARCH_TRUCK_PATH;
         }
-        else if (other.CompareTag("AITruck") && haveBox)
+        
+        if (other.CompareTag("AITruck") && haveBox)
         {
             haveBox = false;
             pathFinder.DeletePath(goalNode, startNode);
+            state = AIstate.SEARCH_BOX_PATH;
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("player") && !haveBox)
+        {
             state = AIstate.SEARCH_BOX_PATH;
         }
     }
