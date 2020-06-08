@@ -12,7 +12,6 @@ public class Spawner : MonoBehaviour
     [SerializeField] GameObject prefabBox;
     [SerializeField] GameObject prefabIa;
     [SerializeField] int maxBoxes;
-    [SerializeField] Tile groundTile;
     PathFinder pathFinder;
     Vector2 playerStartpos;
     Vector2 aiStartPos;
@@ -35,7 +34,7 @@ public class Spawner : MonoBehaviour
         Instantiate(prefabPlayer, playerStartpos, Quaternion.identity);
 
         //spawn AI on the most down right node
-        spawnNode = pathFinder.GetClosestNode(new Vector3Int(mapSize.x, 0, 0));
+        spawnNode = pathFinder.GetClosestNode(new Vector3Int(mapSize.x, -1, 0));
         aiStartPos = spawnNode.pos;
         Instantiate(prefabIa, aiStartPos, Quaternion.identity);
 

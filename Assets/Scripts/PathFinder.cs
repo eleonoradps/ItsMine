@@ -48,7 +48,7 @@ public class PathFinder : MonoBehaviour
 
     [SerializeField] Vector2Int sizeTilemap;
     
-    private void Start()
+    void Start()
     {
         spawner = GetComponent<Spawner>();
         NodeGen();

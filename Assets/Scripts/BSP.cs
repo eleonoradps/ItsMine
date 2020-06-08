@@ -39,7 +39,7 @@ public class BSP : MonoBehaviour
         //ConnectRoom(root);
         BuildWalls(root);
 
-
+        TruckWays();
     }
 
     void CreateBSP(SubRoom subRoom)
@@ -149,6 +149,18 @@ public class BSP : MonoBehaviour
             }
 
         }
+    }
+    void TruckWays()
+    {
+        //player truck way
+        tilemap.SetTile(new Vector3Int(0, 29, 0), g_Tile);
+        tilemap.SetTile(new Vector3Int(0, 28, 0), g_Tile);
+        tilemapWall.SetTile(new Vector3Int(0, 29, 0), null);
+        tilemapWall.SetTile(new Vector3Int(0, 28, 0), null);
+        
+        //AI truck way
+        tilemap.SetTile(new Vector3Int(27, -1, 0), g_Tile);
+        tilemapWall.SetTile(new Vector3Int(27, -1, 0), null);
     }
 }
 
