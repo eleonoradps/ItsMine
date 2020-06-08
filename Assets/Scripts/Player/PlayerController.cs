@@ -5,15 +5,17 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     Rigidbody2D body;
+    Transform playerPos;
     [SerializeField] Camera cam;
     Vector2 mousePosition;
     Vector2 direction;
     [SerializeField]float speed;
 
     
-    void Start()
+    void Awake()
     {
         body = GetComponent<Rigidbody2D>();
+        playerPos = GetComponent<Transform>();
     }
 
     private void FixedUpdate()
@@ -28,5 +30,10 @@ public class PlayerController : MonoBehaviour
     {
         direction = new Vector2(Input.GetAxisRaw("Horizontal") * speed, Input.GetAxisRaw("Vertical") * speed);
         mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
+    }
+
+    public Vector2 ReturnPlayerPos()
+    {
+        return playerPos.position;
     }
 }
