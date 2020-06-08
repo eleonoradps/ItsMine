@@ -6,7 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody2D body;
     Transform playerPos;
-    [SerializeField] Camera cam;
+    Camera cam;
+    CameraFollower cameraFollower;
     Vector2 mousePosition;
     Vector2 direction;
     [SerializeField]float speed;
@@ -16,20 +17,23 @@ public class PlayerController : MonoBehaviour
     {
         body = GetComponent<Rigidbody2D>();
         playerPos = GetComponent<Transform>();
+        cam = FindObjectOfType<Camera>();
+        cameraFollower = FindObjectOfType<CameraFollower>();
     }
 
-    private void FixedUpdate()
-    {
-        body.velocity = new Vector2(direction.x * speed * Time.fixedDeltaTime, direction.y * speed * Time.fixedDeltaTime);
-        Vector2 lookDirection = mousePosition - body.position;
-        float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
-        body.rotation = angle;
-    }
-    
     void Update()
     {
+        
+        body.velocity = new Vector2(direction.x * speed * Time.deltaTime, direction.y * speed * Time.deltaTime);
+        Vector2 lookDirection = mousePosition - body.position;
+        float angle = Mathf.Atan2(lookDirection.y, lookDirection.x)* Mathf.Rad2Deg;
+        body.rotation = angle;
+        
         direction = new Vector2(Input.GetAxisRaw("Horizontal") * speed, Input.GetAxisRaw("Vertical") * speed);
         mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
+        
+        //fix camera position in player position
+        cameraFollower.GetPlayerPos(playerPos);
     }
 
     public Vector2 ReturnPlayerPos()

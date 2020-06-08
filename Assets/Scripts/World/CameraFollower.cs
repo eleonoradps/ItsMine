@@ -1,13 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraFollower : MonoBehaviour
 {
-    [SerializeField] GameObject player;
-
-    void Update () 
+    public void GetPlayerPos(Transform player)
     {
-        transform.position = player.transform.position;
+        transform.position = player.position;
     }
 }
