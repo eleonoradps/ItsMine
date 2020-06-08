@@ -10,7 +10,8 @@ TagManager:
   - wall
   - ground
   - background
-  - truck
+  - playerTruck
+  - AITruck
   layers:
   - Default
   - TransparentFX

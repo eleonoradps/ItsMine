@@ -8,13 +8,13 @@ public class AIStateMachine : MonoBehaviour
     enum AIstate
     {
         IDLE,
-        SEARCH_PATH,
-        TAKE_BOX,
-        PUT_BOX_IN_TRUCK,
-        ATTACK_PLAYER
+        SEARCH_BOX_PATH,
+        SEARCH_TRUCK_PATH,
+        SEARCH_PLAYER_PATH,
+        FOLLOW_PATH
     }
     
-    AIstate state = AIstate.SEARCH_PATH;
+    AIstate state = AIstate.SEARCH_BOX_PATH;
 
     PathFinder pathFinder;
     Transform aiPos;
@@ -23,10 +23,13 @@ public class AIStateMachine : MonoBehaviour
     [SerializeField] float speed;
     float distance;
     bool haveBox = false;
+    Vector2 takenBoxPos;
+    
 
-    PathFinder.Node startNode;
     PathFinder.Node goalNode;
+    PathFinder.Node startNode;
     PathFinder.Node currentNode;
+    PathFinder.Node truckNode;
     
     
     void Awake()
@@ -35,6 +38,7 @@ public class AIStateMachine : MonoBehaviour
         aiBody = GetComponent<Rigidbody2D>();
         pathFinder = FindObjectOfType<PathFinder>();
         spawner = FindObjectOfType<Spawner>();
+        truckNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
     }
     
     void Update()
@@ -43,34 +47,44 @@ public class AIStateMachine : MonoBehaviour
         {
             case AIstate.IDLE:
                 break;
-            case AIstate.SEARCH_PATH:
+            case AIstate.SEARCH_BOX_PATH:
                 
                 Vector2 boxPos = spawner.ReturnRandomBoxPos();
-                startNode = pathFinder.GetClosestNode(new Vector3(boxPos.x, boxPos.y, 0));
-                goalNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
-                pathFinder.FindPath(startNode, goalNode);
-                currentNode = goalNode;
-                state = AIstate.TAKE_BOX;
+                goalNode = pathFinder.GetClosestNode(new Vector3(boxPos.x, boxPos.y, 0));
+                startNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
+                pathFinder.FindPath(goalNode, startNode);
+                currentNode = startNode;
+                state = AIstate.FOLLOW_PATH;
                 break;
-            case AIstate.TAKE_BOX:
+            case AIstate.SEARCH_TRUCK_PATH:
                 
-                FollowPath(startNode);
+                goalNode = truckNode;
+                startNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
+                pathFinder.FindPath(goalNode, startNode);
+                currentNode = startNode;
+                state = AIstate.FOLLOW_PATH;
                 break;
-            case AIstate.PUT_BOX_IN_TRUCK:
+            case AIstate.SEARCH_PLAYER_PATH:
                 
-                
+                /*Vector2 boxPos = spawner.ReturnRandomBoxPos();
+                goalNode = pathFinder.GetClosestNode(new Vector3(boxPos.x, boxPos.y, 0));
+                startNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
+                pathFinder.FindPath(goalNode, startNode);
+                currentNode = startNode;
+                state = AIstate.FOLLOW_PATH;*/
                 break;
-            case AIstate.ATTACK_PLAYER:
+            case AIstate.FOLLOW_PATH:
                 
+                FollowPath(goalNode);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
     }
 
-    void FollowPath(PathFinder.Node startNode)
+    void FollowPath(PathFinder.Node goalNode)
     {
-        if (currentNode != startNode)
+        if (currentNode != goalNode)
         {
             aiBody.velocity = (currentNode.parent.pos - (Vector2)aiPos.position).normalized * speed;
         }
@@ -82,12 +96,26 @@ public class AIStateMachine : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("box"))
         {
             Destroy(other.gameObject);
+            takenBoxPos = other.transform.position;
             haveBox = true;
+            pathFinder.DeletePath(goalNode, startNode);
+            state = AIstate.SEARCH_TRUCK_PATH;
         }
+        else if (other.CompareTag("AITruck") && haveBox)
+        {
+            haveBox = false;
+            pathFinder.DeletePath(goalNode, startNode);
+            state = AIstate.SEARCH_BOX_PATH;
+        }
+    }
+
+    public Vector2 returnTakenBoxPos()
+    {
+        return takenBoxPos;
     }
 }

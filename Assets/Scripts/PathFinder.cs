@@ -247,6 +247,7 @@ public class PathFinder : MonoBehaviour
             currentNode.type = NodeType.FREE;
             currentNode = currentNode.parent;
         }
+        startNode.type = NodeType.FREE;
     }
 
 
