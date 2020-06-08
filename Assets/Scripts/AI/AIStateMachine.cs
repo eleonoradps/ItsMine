@@ -65,12 +65,8 @@ public class AIStateMachine : MonoBehaviour
                 state = AIstate.FOLLOW_PATH;
                 break;
             case AIstate.SEARCH_PLAYER_PATH:
-                
-                /*Vector2 boxPos = spawner.ReturnRandomBoxPos();
-                goalNode = pathFinder.GetClosestNode(new Vector3(boxPos.x, boxPos.y, 0));
-                startNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
-                pathFinder.FindPath(goalNode, startNode);
-                currentNode = startNode;
+
+                /*ChasePlayer();
                 state = AIstate.FOLLOW_PATH;*/
                 break;
             case AIstate.FOLLOW_PATH:
@@ -107,7 +103,8 @@ public class AIStateMachine : MonoBehaviour
             pathFinder.DeletePath(goalNode, startNode);
             state = AIstate.SEARCH_TRUCK_PATH;
         }
-        else if (other.CompareTag("AITruck") && haveBox)
+        
+        if (other.CompareTag("AITruck") && haveBox)
         {
             haveBox = false;
             pathFinder.DeletePath(goalNode, startNode);

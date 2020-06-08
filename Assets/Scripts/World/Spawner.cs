@@ -95,5 +95,6 @@ public class Spawner : MonoBehaviour
             }
         }
         boxesPos.Remove(indexBox);
+        maxBoxes--;
     }
 }
