@@ -70,11 +70,6 @@ public class AIStateMachine : MonoBehaviour
                 currentNode = startNode;
                 state = AIstate.FOLLOW_PATH;
                 break;
-            case AIstate.CHASE_PLAYER:
-                
-                CheckAi();
-                CheckDistance();
-                break;
             case AIstate.FOLLOW_PATH:
                 
                 CheckAi();

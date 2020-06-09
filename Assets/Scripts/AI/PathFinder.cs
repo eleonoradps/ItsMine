@@ -42,8 +42,6 @@ public class PathFinder : MonoBehaviour
     [SerializeField] Tilemap groundTileMap;
     [SerializeField] Tilemap wallTileMap;
 
-    float lerp = 0.1f;
-
     Node[,] nodes;
 
     [SerializeField] Vector2Int sizeTilemap;
@@ -53,28 +51,6 @@ public class PathFinder : MonoBehaviour
         spawner = GetComponent<Spawner>();
         NodeGen();
     }
-
-    /*private void Update()
-    {
-        if (currentNode != startNode)
-        {
-            circle.transform.position = Vector3.Lerp(currentNode.pos, currentNode.parent.pos, lerp);
-            lerp += 0.1f;
-        }
-        else if (startNode != null)
-        {
-            DeletePath(startNode, endNode);
-            RandomPos();
-            FindPath(startNode, endNode);
-            currentNode = endNode;
-        }
-
-        if (lerp >= 1)
-        {
-            currentNode = currentNode.parent;
-            lerp = 0.1f;
-        }
-    }*/
 
     void NodeGen()
     {
@@ -138,10 +114,6 @@ public class PathFinder : MonoBehaviour
             }
         }
         spawner.SpawnEntities(sizeTilemap);
-        
-        //RandomPos();
-        //FindPath(startNode, endNode);
-        //currentNode = endNode;
     }
 
     public float DistanceManhattan(Vector3 pos1, Vector3 pos2)

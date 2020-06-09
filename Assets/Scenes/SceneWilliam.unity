@@ -3712,7 +3712,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99371742c5872cb4f8960c3354e1d744, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
 --- !u!1 &955073956
 GameObject:
   m_ObjectHideFlags: 0
@@ -3862,7 +3861,6 @@ MonoBehaviour:
   prefabIa: {fileID: 5896148204484885925, guid: 7d20a9e8f6112c44f82c09a1bc2ffe29,
     type: 3}
   maxBoxes: 10
-  groundTile: {fileID: 11400000, guid: a4ad710f4d15fe040ad7ef58df8b1df9, type: 2}
 --- !u!1 &1781538001
 GameObject:
   m_ObjectHideFlags: 0
@@ -3918,12 +3916,12 @@ PrefabInstance:
     - target: {fileID: 7758041148880895425, guid: 5311eb96e8df271449f948870b53b7a7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.53
+      value: 2.57
       objectReference: {fileID: 0}
     - target: {fileID: 7758041148880895425, guid: 5311eb96e8df271449f948870b53b7a7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 21.98
+      value: 22.28
       objectReference: {fileID: 0}
     - target: {fileID: 7758041148880895425, guid: 5311eb96e8df271449f948870b53b7a7,
         type: 3}
@@ -3989,15 +3987,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: AI Truck
       objectReference: {fileID: 0}
+    - target: {fileID: 8039197237615840805, guid: f9f6254d818c1b642919ac965b10f97e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8039197237615840809, guid: f9f6254d818c1b642919ac965b10f97e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 16.51
+      value: 16.59
       objectReference: {fileID: 0}
     - target: {fileID: 8039197237615840809, guid: f9f6254d818c1b642919ac965b10f97e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.03
+      value: -3.79
       objectReference: {fileID: 0}
     - target: {fileID: 8039197237615840809, guid: f9f6254d818c1b642919ac965b10f97e,
         type: 3}
