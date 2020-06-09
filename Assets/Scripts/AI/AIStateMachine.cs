@@ -18,6 +18,7 @@ public class AIStateMachine : MonoBehaviour
 
     PlayerController playerController;
     PathFinder pathFinder;
+    EndGame endGame;
     Transform aiPos;
     Rigidbody2D aiBody;
     Spawner spawner;
@@ -42,6 +43,7 @@ public class AIStateMachine : MonoBehaviour
         pathFinder = FindObjectOfType<PathFinder>();
         spawner = FindObjectOfType<Spawner>();
         playerController = FindObjectOfType<PlayerController>();
+        endGame = FindObjectOfType<EndGame>();
         truckNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
     }
     
@@ -53,6 +55,7 @@ public class AIStateMachine : MonoBehaviour
                 break;
             case AIstate.SEARCH_BOX_PATH:
                 
+                CheckAi();
                 boxPos = spawner.ReturnRandomBoxPos();
                 goalNode = pathFinder.GetClosestNode(new Vector3(boxPos.x, boxPos.y, 0));
                 startNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
@@ -62,6 +65,7 @@ public class AIStateMachine : MonoBehaviour
                 break;
             case AIstate.SEARCH_TRUCK_PATH:
                 
+                CheckAi();
                 goalNode = truckNode;
                 startNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
                 pathFinder.FindPath(goalNode, startNode);
@@ -70,10 +74,12 @@ public class AIStateMachine : MonoBehaviour
                 break;
             case AIstate.CHASE_PLAYER:
                 
+                CheckAi();
                 CheckDistance();
                 break;
             case AIstate.FOLLOW_PATH:
                 
+                CheckAi();
                 CheckDistance();
                 FollowPath(goalNode);
                 break;
@@ -119,6 +125,15 @@ public class AIStateMachine : MonoBehaviour
         aiBody.velocity = (playerPos - (Vector2)aiPos.position).normalized * speed;
     }
 
+    void CheckAi()
+    {
+        int nbrBoxes = spawner.ReturnNbrBoxes();
+        if (nbrBoxes <= 0)
+        {
+            state = AIstate.IDLE;
+        }
+    }
+
     public void PutSearchBoxState()
     {
         state = AIstate.SEARCH_BOX_PATH;
@@ -137,6 +152,7 @@ public class AIStateMachine : MonoBehaviour
             takenBoxPos = other.transform.position;
             spawner.DeleteBoxPos(takenBoxPos);
             haveBox = true;
+            endGame.SetTrueAiHaveBox();
             pathFinder.DeletePath(goalNode, startNode);
             state = AIstate.SEARCH_TRUCK_PATH;
         }
@@ -144,6 +160,7 @@ public class AIStateMachine : MonoBehaviour
         if (other.CompareTag("AITruck") && haveBox)
         {
             haveBox = false;
+            endGame.SetFalseAiHaveBox();
             pathFinder.DeletePath(goalNode, startNode);
             state = AIstate.SEARCH_BOX_PATH;
         }

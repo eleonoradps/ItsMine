@@ -8,14 +8,17 @@ public class PlayerTakeBoxes : MonoBehaviour
     bool haveBox = false;
     bool canPick = false;
     bool canPutInTruck = false;
+    int nbrBoxesInTruck = 0;
     
     Collider2D boxCollider;
     Spawner spawner;
+    EndGame endGame;
     //AIStateMachine aiStateMachine;
 
     void Awake()
     {
         spawner = FindObjectOfType<Spawner>();
+        endGame = FindObjectOfType<EndGame>();
         //aiStateMachine = FindObjectOfType<AIStateMachine>();
     }
 
@@ -57,12 +60,14 @@ public class PlayerTakeBoxes : MonoBehaviour
             Destroy(boxCollider.gameObject);
             haveBox = true;
             canPick = false;
+            endGame.SetTruePlayerHaveBox();
         }
         
         if (Input.GetKeyDown("e") && canPutInTruck)
         {
             haveBox = false;
             canPutInTruck = false;
+            endGame.SetFalsePlayerHaveBox();
         }
     }
 }

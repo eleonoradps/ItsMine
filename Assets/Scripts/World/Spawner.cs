@@ -15,7 +15,6 @@ public class Spawner : MonoBehaviour
     PathFinder pathFinder;
     Vector2 playerStartpos;
     Vector2 aiStartPos;
-    AIStateMachine aiStateMachine;
 
     List<Vector2> boxesPos;
 
@@ -23,7 +22,6 @@ public class Spawner : MonoBehaviour
     {
         pathFinder = GetComponent<PathFinder>();
         boxesPos = new List<Vector2>();
-        aiStateMachine = FindObjectOfType<AIStateMachine>();
     }
 
     public void SpawnEntities(Vector2Int mapSize)
@@ -95,5 +93,10 @@ public class Spawner : MonoBehaviour
         }
         boxesPos.Remove(indexBox);
         maxBoxes--;
+    }
+
+    public int ReturnNbrBoxes()
+    {
+        return maxBoxes;
     }
 }

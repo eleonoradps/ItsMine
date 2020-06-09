@@ -551,6 +551,7 @@ GameObject:
   - component: {fileID: 1488552722}
   - component: {fileID: 1488552721}
   - component: {fileID: 1488552723}
+  - component: {fileID: 1488552724}
   m_Layer: 0
   m_Name: Map Generator
   m_TagString: Untagged
@@ -629,6 +630,18 @@ MonoBehaviour:
   prefabIa: {fileID: 5896148204484885925, guid: 7d20a9e8f6112c44f82c09a1bc2ffe29,
     type: 3}
   maxBoxes: 10
+--- !u!114 &1488552724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488552719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d6d6b9ed35ff142ba1b08c6665d977, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1881537956
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -636,6 +649,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7758041148880895425, guid: 5311eb96e8df271449f948870b53b7a7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -690,11 +707,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 7758041148880895426, guid: 5311eb96e8df271449f948870b53b7a7,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7758041148880895437, guid: 5311eb96e8df271449f948870b53b7a7,
         type: 3}
