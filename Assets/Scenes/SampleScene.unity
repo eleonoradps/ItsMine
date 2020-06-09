@@ -1216,9 +1216,9 @@ MonoBehaviour:
   sizeRoomMax: 20
   tilemap: {fileID: 742135945}
   tilemapWall: {fileID: 950543312}
-  g_Tile: {fileID: 11400000, guid: a4ad710f4d15fe040ad7ef58df8b1df9, type: 2}
-  c_Tile: {fileID: 11400000, guid: a4ad710f4d15fe040ad7ef58df8b1df9, type: 2}
-  w_Tile: {fileID: 11400000, guid: 34ee0bd9d65004f498115e5df53edb18, type: 2}
+  g_Tile: {fileID: 11400000, guid: de72bd26c76d69643890723c60398bce, type: 2}
+  c_Tile: {fileID: 11400000, guid: de72bd26c76d69643890723c60398bce, type: 2}
+  w_Tile: {fileID: 11400000, guid: 1280de82ecf067a44ab2b1ffbee18c6d, type: 2}
   corridorsHeight: 2
   corridorsWidth: 2
 --- !u!114 &1488552722
