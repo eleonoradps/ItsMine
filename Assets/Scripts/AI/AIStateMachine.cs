@@ -18,7 +18,6 @@ public class AIStateMachine : MonoBehaviour
 
     PlayerController playerController;
     PathFinder pathFinder;
-    EndGame endGame;
     Transform aiPos;
     Rigidbody2D aiBody;
     Spawner spawner;
@@ -43,7 +42,6 @@ public class AIStateMachine : MonoBehaviour
         pathFinder = FindObjectOfType<PathFinder>();
         spawner = FindObjectOfType<Spawner>();
         playerController = FindObjectOfType<PlayerController>();
-        endGame = FindObjectOfType<EndGame>();
         truckNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
     }
     
@@ -152,7 +150,6 @@ public class AIStateMachine : MonoBehaviour
             takenBoxPos = other.transform.position;
             spawner.DeleteBoxPos(takenBoxPos);
             haveBox = true;
-            endGame.SetTrueAiHaveBox();
             pathFinder.DeletePath(goalNode, startNode);
             state = AIstate.SEARCH_TRUCK_PATH;
         }
@@ -160,7 +157,6 @@ public class AIStateMachine : MonoBehaviour
         if (other.CompareTag("AITruck") && haveBox)
         {
             haveBox = false;
-            endGame.SetFalseAiHaveBox();
             pathFinder.DeletePath(goalNode, startNode);
             state = AIstate.SEARCH_BOX_PATH;
         }
