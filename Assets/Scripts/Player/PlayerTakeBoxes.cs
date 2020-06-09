@@ -7,6 +7,7 @@ public class PlayerTakeBoxes : MonoBehaviour
 {
     bool haveBox = false;
     bool canPick = false;
+<<<<<<< HEAD
     bool canPutInTruck = false;
     int nbrBoxesInTruck = 0;
     
@@ -14,12 +15,22 @@ public class PlayerTakeBoxes : MonoBehaviour
     Spawner spawner;
     EndGame endGame;
     //AIStateMachine aiStateMachine;
+=======
+    
+    Collider2D boxCollider;
+    Spawner spawner;
+    AIStateMachine aiStateMachine;
+>>>>>>> parent of 36a6768... player can put boxes in truck
 
     void Awake()
     {
         spawner = FindObjectOfType<Spawner>();
+<<<<<<< HEAD
         endGame = FindObjectOfType<EndGame>();
         //aiStateMachine = FindObjectOfType<AIStateMachine>();
+=======
+        aiStateMachine = FindObjectOfType<AIStateMachine>();
+>>>>>>> parent of 36a6768... player can put boxes in truck
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -29,20 +40,12 @@ public class PlayerTakeBoxes : MonoBehaviour
             canPick = true;
             boxCollider = other;
         }
-
-        if (other.CompareTag("playerTruck") && haveBox)
-            canPutInTruck = true;
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("box"))
             canPick = false;
-        
-        if (other.CompareTag("playerTruck"))
-        {
-            canPutInTruck = false;
-        }
     }
 
     void Update()
@@ -62,6 +65,7 @@ public class PlayerTakeBoxes : MonoBehaviour
             canPick = false;
             endGame.SetTruePlayerHaveBox();
         }
+<<<<<<< HEAD
         
         if (Input.GetKeyDown("e") && canPutInTruck)
         {
@@ -69,5 +73,7 @@ public class PlayerTakeBoxes : MonoBehaviour
             canPutInTruck = false;
             endGame.SetFalsePlayerHaveBox();
         }
+=======
+>>>>>>> parent of 36a6768... player can put boxes in truck
     }
 }
