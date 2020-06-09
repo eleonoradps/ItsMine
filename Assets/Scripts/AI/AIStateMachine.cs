@@ -26,6 +26,7 @@ public class AIStateMachine : MonoBehaviour
     [SerializeField] float minDistance = 0f;
     bool haveBox = false;
     Vector2 takenBoxPos;
+    Vector2 boxPos;
     
 
     PathFinder.Node goalNode;
@@ -52,7 +53,7 @@ public class AIStateMachine : MonoBehaviour
                 break;
             case AIstate.SEARCH_BOX_PATH:
                 
-                Vector2 boxPos = spawner.ReturnRandomBoxPos();
+                boxPos = spawner.ReturnRandomBoxPos();
                 goalNode = pathFinder.GetClosestNode(new Vector3(boxPos.x, boxPos.y, 0));
                 startNode = pathFinder.GetClosestNode(new Vector3(aiPos.position.x, aiPos.position.y, 0));
                 pathFinder.FindPath(goalNode, startNode);
@@ -116,6 +117,16 @@ public class AIStateMachine : MonoBehaviour
     {
         Vector2 playerPos = playerController.ReturnPlayerPos();
         aiBody.velocity = (playerPos - (Vector2)aiPos.position).normalized * speed;
+    }
+
+    public void PutSearchBoxState()
+    {
+        state = AIstate.SEARCH_BOX_PATH;
+    }
+
+    public Vector2 ReturnBoxPos()
+    {
+        return boxPos;
     }
 
     void OnTriggerEnter2D(Collider2D other)
