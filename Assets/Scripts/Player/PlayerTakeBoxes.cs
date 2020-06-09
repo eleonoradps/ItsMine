@@ -27,12 +27,18 @@ public class PlayerTakeBoxes : MonoBehaviour
             canPick = true;
             boxCollider = other;
         }
+        
+        if (other.CompareTag("playerTruck") && haveBox)
+            canPutInTruck = true;
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("box"))
             canPick = false;
+
+        if (other.CompareTag("playerTruck"))
+            canPutInTruck = false;
     }
 
     void Update()
