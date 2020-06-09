@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class EndGame : MonoBehaviour
 {
-    Spawner spawner;
+    private Spawner spawner;
 
-    void Start()
+    private void Start()
     {
         spawner = GetComponent<Spawner>();
     }
 
-    void Update()
+    private void Update()
     {
         int nbrBoxes = spawner.ReturnNbrBoxes();
 

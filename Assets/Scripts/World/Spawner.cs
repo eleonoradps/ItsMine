@@ -8,13 +8,13 @@ using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] GameObject prefabPlayer;
-    [SerializeField] GameObject prefabBox;
-    [SerializeField] GameObject prefabIa;
-    [SerializeField] int maxBoxes;
-    PathFinder pathFinder;
-    Vector2 playerStartpos;
-    Vector2 aiStartPos;
+    [SerializeField] private GameObject prefabPlayer;
+    [SerializeField] private GameObject prefabBox;
+    [SerializeField] private GameObject prefabIa;
+    [SerializeField] private int maxBoxes;
+    private PathFinder pathFinder;
+    private Vector2 playerStartpos;
+    private Vector2 aiStartPos;
 
     List<Vector2> boxesPos;
 

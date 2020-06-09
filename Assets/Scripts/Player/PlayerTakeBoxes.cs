@@ -5,22 +5,22 @@ using UnityEngine;
 
 public class PlayerTakeBoxes : MonoBehaviour
 {
-    bool haveBox = false;
-    bool canPick = false;
-    bool canPutInTruck = false;
-    int nbrBoxesInTruck = 0;
+    private bool haveBox = false;
+    private bool canPick = false;
+    private bool canPutInTruck = false;
+    private int nbrBoxesInTruck = 0;
     
-    Collider2D boxCollider;
-    Spawner spawner;
-    AIStateMachine aiStateMachine;
+    private Collider2D boxCollider;
+    private Spawner spawner;
+    private AIStateMachine aiStateMachine;
     
-    void Awake()
+    private void Awake()
     {
         spawner = FindObjectOfType<Spawner>();
         aiStateMachine = FindObjectOfType<AIStateMachine>();
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("box") && !haveBox)
         {
@@ -32,7 +32,7 @@ public class PlayerTakeBoxes : MonoBehaviour
             canPutInTruck = true;
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("box"))
             canPick = false;
@@ -41,18 +41,12 @@ public class PlayerTakeBoxes : MonoBehaviour
             canPutInTruck = false;
     }
 
-    void Update()
+    private void Update()
     {
         //Pick
         if (Input.GetKeyDown("e") && canPick)
         {
             spawner.DeleteBoxPos(boxCollider.gameObject.transform.position);
-            /*Vector2 boxPos = aiStateMachine.ReturnBoxPos();
-            if (boxPos == (Vector2)boxCollider.gameObject.transform.position) ;
-            {
-                aiStateMachine.PutSearchBoxState();
-            }*/
-            
             Destroy(boxCollider.gameObject);
             haveBox = true;
             canPick = false;
