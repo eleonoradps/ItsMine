@@ -12,6 +12,7 @@ public class MenuManager : MonoBehaviour
     public void LoadGameScene()
     {
         SceneManager.LoadScene("SampleScene");
+        Time.timeScale = 1f;
     }
 
     public void LoadCreditsScene()
