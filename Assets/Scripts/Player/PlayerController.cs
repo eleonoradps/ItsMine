@@ -25,10 +25,7 @@ public class PlayerController : MonoBehaviour
     {
         
         body.velocity = new Vector2(direction.x * speed * Time.deltaTime, direction.y * speed * Time.deltaTime);
-        Vector2 lookDirection = mousePosition - body.position;
-        float angle = Mathf.Atan2(lookDirection.y, lookDirection.x)* Mathf.Rad2Deg;
-        body.rotation = angle;
-        
+
         direction = new Vector2(Input.GetAxisRaw("Horizontal") * speed, Input.GetAxisRaw("Vertical") * speed);
         mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
         
