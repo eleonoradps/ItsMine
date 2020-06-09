@@ -10,11 +10,11 @@ public class BSP : MonoBehaviour
     [SerializeField] private int sizeRoomMin;
     [SerializeField] private int sizeRoomMax;
 
-    [SerializeField] Tilemap tilemap;
-    [SerializeField] Tilemap tilemapWall;
-    [SerializeField] Tile g_Tile; //ground tile
-    [SerializeField] Tile c_Tile; //corridors tile
-    [SerializeField] Tile w_Tile; //wall tile
+    [SerializeField] private Tilemap tilemap;
+    [SerializeField] private Tilemap tilemapWall;
+    [SerializeField] private Tile g_Tile; //ground tile
+    [SerializeField] private Tile c_Tile; //corridors tile
+    [SerializeField] private Tile w_Tile; //wall tile
 
     [SerializeField] private int corridorsHeight;
     [SerializeField] private int corridorsWidth;
@@ -36,23 +36,16 @@ public class BSP : MonoBehaviour
         boardFloorPositions = new GameObject[boardRows, boardColumns];
         DrawRooms(root);
         BuildCorridors(root);
-        //ConnectRoom(root);
         BuildWalls(root);
 
         TruckWays();
     }
 
-    void CreateBSP(SubRoom subRoom)
+    private void CreateBSP(SubRoom subRoom)
     {
         if (subRoom.IsLeaf()) // if subroom too large
         {
-            if (/*subRoom.Rectangle.width > sizeRoomMax || subRoom.Rectangle.height > sizeRoomMax ||*/
-                (
-                    subRoom.Rectangle.width > sizeRoomMin &&
-                    subRoom.Rectangle.height > sizeRoomMin) /*&&*/
-                    //Random.Range(0.0f, 1.0f) > 0.25f
-                   )
-
+            if (subRoom.Rectangle.width > sizeRoomMin && subRoom.Rectangle.height > sizeRoomMin)
             {
                 subRoom.Split((int) sizeRoomMin, (int)sizeRoomMax);
                 CreateBSP(subRoom.Left);
@@ -62,7 +55,7 @@ public class BSP : MonoBehaviour
     }
 
 
-    void DrawRooms(SubRoom subRoom)
+    private void DrawRooms(SubRoom subRoom)
     {
         if (subRoom == null)
         {
@@ -75,9 +68,6 @@ public class BSP : MonoBehaviour
                 for (int j = Mathf.RoundToInt(subRoom.Room.y); j < subRoom.Room.yMax; j++)
                 {
                     tilemap.SetTile(new Vector3Int(i, j, 0), g_Tile);
-                    //GameObject instance = Instantiate(groundTile, new Vector3(i, j, 0f), Quaternion.identity) as GameObject;
-                    //instance.transform.SetParent(transform);
-                    //boardFloorPositions[i, j] = instance;
                 }
             }
         }
@@ -88,21 +78,7 @@ public class BSP : MonoBehaviour
         }
     }
 
-    //void ConnectRoom(SubRoom subRoom) //question
-    //{
-    //    if (subRoom.Left != null)
-    //    {
-    //        ConnectRoom(subRoom.Left);
-    //    }
-    //    if (subRoom.Right != null)
-    //    {
-    //        ConnectRoom(subRoom.Right);
-    //    }
-
-    //    subRoom.CreateCorridors(subRoom.Left, subRoom.Right);
-    //}
-
-    void BuildCorridors(SubRoom subRoom) //recursive function
+    private void BuildCorridors(SubRoom subRoom) //recursive function
     {
         if (subRoom == null) //check if subroom exists
         {
@@ -123,20 +99,16 @@ public class BSP : MonoBehaviour
             {
                 for (int j = Mathf.RoundToInt(corridor.y); j < corridor.yMax; j++)
                 {
-                    Debug.Log(i + " " + j);
                     if (boardFloorPositions[i, j] == null)
                     {
                         tilemap.SetTile(new Vector3Int(i, j, 0), c_Tile);
-                        //GameObject instance = Instantiate(corridorTile, new Vector3(i, j, 0), Quaternion.identity) as GameObject;
-                        //instance.transform.SetParent(transform);
-                        //boardFloorPositions[i, j] = instance;
-
                     }
                 }
             }
         }
     }
-    void BuildWalls(SubRoom subRoom)
+
+    private void BuildWalls(SubRoom subRoom)
     {
         for (int i = -1 ; i < boardRows; i++)
         {
@@ -150,7 +122,8 @@ public class BSP : MonoBehaviour
 
         }
     }
-    void TruckWays()
+
+    private void TruckWays()
     {
         //player truck way
         tilemap.SetTile(new Vector3Int(0, 29, 0), g_Tile);
@@ -166,7 +139,6 @@ public class BSP : MonoBehaviour
 
 class SubRoom
 {
-    public SubRoom(Rect newRectangle) { rectangle = newRectangle; }
     private SubRoom left; //child1
     private SubRoom right; //child2
     private Rect rectangle;
@@ -202,6 +174,8 @@ class SubRoom
         get => corridors;
         set => corridors = value;
     }
+
+    public SubRoom(Rect newRectangle) { rectangle = newRectangle; }
 
     public bool IsLeaf() // know if node in the tree has children
     {
@@ -312,13 +286,11 @@ class SubRoom
         Rect leftRoom = left.GetRoom();
         Rect rightRoom = right.GetRoom();
 
-        Debug.Log(leftRoom + " " + rightRoom);
         //attach corridor to a random point in each room
         Vector2 leftPoint = new Vector2(Mathf.RoundToInt(Random.Range(leftRoom.x + 1, leftRoom.xMax - 1)),
                                         Mathf.RoundToInt(Random.Range(leftRoom.y + 1, leftRoom.yMax - 1)));
         Vector2 rightPoint = new Vector2(Mathf.RoundToInt(Random.Range(rightRoom.x + 1, rightRoom.xMax - 1)),
                                         Mathf.RoundToInt(Random.Range(rightRoom.y + 1, rightRoom.yMax - 1)));
-        Debug.Log(leftPoint + " " + rightPoint);
 
         //check left point is on the left
         if (leftPoint.x > rightPoint.x)
